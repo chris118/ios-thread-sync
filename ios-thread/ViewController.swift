@@ -22,12 +22,17 @@ class ViewController: UIViewController {
     }
     
     @IBAction func objc_sync_enter() {
-        for  i in 0...10 {
-            ObjectiveC.objc_sync_enter(sync)
+        var count = 0
+        for  _ in 0...10 {
             let task = sesstion.dataTask(with: request) { [weak self](data, response, error) in
-                print(" task \(i)")
-                ObjectiveC.objc_sync_exit(self?.sync ?? 0)
+                guard let `self` = self else {return}
+                ObjectiveC.objc_sync_enter(self.sync)
+                count += 1
+                print(" task \(count)")
+                ObjectiveC.objc_sync_exit(self.sync)
             }
+            
+
             task.resume()
             
         }
